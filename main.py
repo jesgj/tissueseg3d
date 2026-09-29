@@ -119,7 +119,7 @@ def segment_cells(vw: Viewer, cell_gaussrad=0.5, cell_regrad=5, cell_minvol=2e3,
         print('Relabeling cells')
         cell_lbl = relabel(cell_lbl)
         print('Measuring cells')
-        properties = regionprops_table(cell_lbl, properties=['label', 'centroid', 'area', 'MajorAxisLength', 'MinorAxisLength'])
+        properties = regionprops_table(cell_lbl, properties=['label', 'centroid', 'area'])
 
         #### Export results
         print('-------------------------------')
@@ -128,7 +128,7 @@ def segment_cells(vw: Viewer, cell_gaussrad=0.5, cell_regrad=5, cell_minvol=2e3,
         chmod(str(imagefile).replace('.tif', '_lbl.tif'), 0o666)
         print(str(imagefile).replace('.tif', '_lbl.tif'))
         df = pd.DataFrame(properties)
-        df.columns = ['Cell', 'CZ', 'CY', 'CX', 'Volume (vox)', 'MajorAxis (pix)', 'MinorAxis (pix)']
+        df.columns = ['Cell', 'CZ', 'CY', 'CX', 'Volume (vox)']
         df.to_csv(str(imagefile).replace('.tif', '_lbl.csv'), index=False)
         chmod(str(imagefile).replace('.tif', '_lbl.csv'), 0o666)
         print(str(imagefile).replace('.tif', '_lbl.csv'))
@@ -177,7 +177,7 @@ def segment_nuclei(vw: Viewer, nucleus_gaussrad=1.5, nucleus_thr=500, nucleus_re
         print('Filling nuclei holes')
         nucleus_lbl = fill_lbl_holes(nucleus_lbl)
         print('Measuring nuclei')
-        properties = regionprops_table(nucleus_lbl, properties=['label', 'centroid', 'area', 'MajorAxisLength', 'MinorAxisLength'])
+        properties = regionprops_table(nucleus_lbl, properties=['label', 'centroid', 'area'])
 
         #### Export results
         print('-------------------------------')
@@ -186,7 +186,7 @@ def segment_nuclei(vw: Viewer, nucleus_gaussrad=1.5, nucleus_thr=500, nucleus_re
         chmod(str(imagefile).replace('.tif', '_nuc_lbl.tif'), 0o666)
         print(str(imagefile).replace('.tif', '_nuc_lbl.tif'))
         df = pd.DataFrame(properties)
-        df.columns = ['Cell', 'CZ', 'CY', 'CX', 'Volume (vox)', 'MajorAxis (pix)', 'MinorAxis (pix)']
+        df.columns = ['Cell', 'CZ', 'CY', 'CX', 'Volume (vox)']
         df.to_csv(str(imagefile).replace('.tif', '_nuc_lbl.csv'), index=False)
         chmod(str(imagefile).replace('.tif', '_nuc_lbl.csv'), 0o666)
         print(str(imagefile).replace('.tif', '_nuc_lbl.csv'))
