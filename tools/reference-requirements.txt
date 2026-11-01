@@ -1,0 +1,9 @@
+# Exact Python packages used by tools/validate_migration.py as the oracle.
+# The reference interpreter is /tmp/tissueseg3d-reference-env/bin/python.
+# Versions were recorded from that environment; keep this file in sync with
+# the environment used to produce any reported validation result.
+numpy==2.5.4
+scipy==1.18.1
+scikit-image==0.25.2
+pandas==2.3.1
+tifffile==2026.10.15

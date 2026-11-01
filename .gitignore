@@ -1,0 +1,16 @@
+# Rust build output
+/target/
+**/*.rs.bk
+
+# Python reference-tool caches
+__pycache__/
+*.py[cod]
+
+# Local release/archive staging
+/dist/
+/release/
+*.zip
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
