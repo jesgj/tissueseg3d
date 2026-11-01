@@ -62,3 +62,9 @@ The SVML source distributed with NumPy carries the same BSD 3-Clause terms
 with the header `Copyright (c) 2005-2021, NumPy Developers. All rights
 reserved.` and Intel's notice that the software is provided under the licence
 referenced in `https://github.com/numpy/SVML`.
+
+The adapted SVML assembly also retains this upstream copyright notice:
+
+```
+Copyright 1996-2023 Intel Corporation.
+```

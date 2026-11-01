@@ -30,12 +30,25 @@ cargo build --release --locked
 On Windows the executable is `target\release\tissueseg3d.exe`. On macOS,
 building from source avoids the quarantine applied to downloaded binaries.
 
+The published Windows release build links the C runtime statically (MSVC
+`+crt-static`), so the archive runs without installing the Visual C++
+redistributable. A plain `cargo build --release` is still valid for local use
+and uses the toolchain's default runtime linkage. To
+build a portable static-runtime binary locally in PowerShell:
+
+```powershell
+$env:CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_RUSTFLAGS = "-C target-feature=+crt-static"
+cargo build --release --locked --target x86_64-pc-windows-msvc
+.\target\x86_64-pc-windows-msvc\release\tissueseg3d.exe --help
+```
+
 When release archives are published by the workflow, each platform gets one
 archive named after it (`tissueseg3d-<platform>.tar.gz` on Linux and macOS,
 `tissueseg3d-<platform>.zip` on Windows). An archive contains the executable,
 `LICENSE`, `README.md` and, when the repository provides it,
 `THIRD_PARTY_NOTICES`; the tar archives keep the executable permission, so
-extract rather than copying the bare binary.
+extract rather than copying the bare binary. The Windows archive needs no
+separate runtime installation.
 
 The app accepts:
 
@@ -225,17 +238,14 @@ The test suite covers the volume primitives, filtering and segmentation
 behavior, IO validation and export. Where independent reference data is used,
 it was generated with the Python implementation and compared stage by stage.
 
-Current status, stated without extrapolation:
+Native CI has passed the reference tests, release build and headless demo on
+Linux x86-64, Windows x86-64, macOS Apple Silicon and macOS Intel. There are 88
+passing tests on Linux/macOS and 87 on Windows, where a Unix-only write-error
+test is excluded. Interactive GUI rendering has been checked locally on Linux;
+the other systems have native build and batch-runtime coverage.
 
-- The app has been built, tested and run on Linux x86-64. That is the only
-  platform with actual runtime verification so far.
-- `cargo check` passes for all three other configured Rust targets
-  (Windows x86-64, macOS Apple Silicon, macOS Intel). Passing a check is
-  compile-level evidence only.
-- The GitHub Actions workflow in `.github/workflows/rust.yml` is prepared to
-  build, smoke-test and package the executable natively on those platforms,
-  but that native CI has not been run yet. It is not a claim that the
-  interactive GUI has been validated on every operating system.
+See the [Rust workflow](https://github.com/jesgj/tissueseg3d/actions/workflows/rust.yml)
+for per-commit build results and downloadable archives.
 
 The reproducible Python-vs-Rust comparison is documented in
 [docs/VALIDATION.md](docs/VALIDATION.md): it lists the reference environment,

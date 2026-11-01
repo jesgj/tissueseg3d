@@ -49,6 +49,12 @@ jobs:
     name: Build and smoke test (${{ matrix.name }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
+    env:
+      # Statically link the MSVC C runtime into the Windows release binary so
+      # users need no extra Visual C++ redistributable. The variable is named
+      # after the target triple, so it only affects Windows builds and leaves
+      # host proc-macro compilation dynamic.
+      CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_RUSTFLAGS: "-C target-feature=+crt-static"
     strategy:
       fail-fast: false
       matrix:
@@ -57,18 +63,22 @@ jobs:
             os: ubuntu-22.04
             artifact: tissueseg3d-linux-x86_64
             binary: target/release/tissueseg3d
+            target_args: ""
           - name: windows-x86_64
             os: windows-2022
             artifact: tissueseg3d-windows-x86_64
-            binary: target/release/tissueseg3d.exe
+            binary: target/x86_64-pc-windows-msvc/release/tissueseg3d.exe
+            target_args: "--target x86_64-pc-windows-msvc"
           - name: macos-arm64
             os: macos-15
             artifact: tissueseg3d-macos-arm64
             binary: target/release/tissueseg3d
+            target_args: ""
           - name: macos-x86_64
             os: macos-15-intel
             artifact: tissueseg3d-macos-x86_64
             binary: target/release/tissueseg3d
+            target_args: ""
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -87,9 +97,9 @@ jobs:
             libxcb-xfixes0-dev \
             libgl1-mesa-dev
       - name: Test processing and application state on this platform
-        run: cargo test --locked --all-targets
+        run: cargo test --locked --all-targets ${{ matrix.target_args }}
       - name: Build release binary
-        run: cargo build --release --locked
+        run: cargo build --release --locked ${{ matrix.target_args }}
       - name: Smoke test --help
         shell: bash
         run: |

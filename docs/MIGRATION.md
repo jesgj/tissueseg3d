@@ -260,12 +260,11 @@ are not treated as borders, matching Python.
 - Where reference fixtures were generated independently with Python, they were
   compared against the Rust stages. Fixtures and generation/validation scripts
   are part of the repository.
-- The executable has been built, tested and run on Linux x86-64. `cargo check`
-  passes for the other three configured Rust targets (Windows x86-64, macOS
-  Apple Silicon, macOS Intel); that is compile-level evidence only. The CI
-  workflow is prepared to build, smoke-test and package the binary natively on
-  all four platforms, but that native CI has not been run yet, so no other
-  platform has actual runtime verification.
+- Native CI has passed the reference tests, release build and headless demo on
+  Linux x86-64, Windows x86-64, macOS Apple Silicon and macOS Intel. Linux/macOS
+  run 88 tests; Windows runs 87 because a Unix-only write-error test is
+  excluded. Interactive GUI rendering has been checked locally on Linux;
+  this does not claim manual GUI testing on the other platforms.
 - No complete numerical parity claim is made for every possible input. Output
   parity is asserted only for the cases measured by the reference fixtures and
   reported alongside the commands that produced them. The reproducible
